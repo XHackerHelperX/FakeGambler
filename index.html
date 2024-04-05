@@ -32,8 +32,14 @@
     }
     #codeArea {
         width: 100%;
-        height: calc(100% - 40px);
+        height: calc(50% - 40px);
         resize: none;
+    }
+    #urlInput {
+        width: calc(100% - 40px);
+        padding: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
     }
     #injectButton {
         width: 100%;
@@ -48,7 +54,8 @@
 </head>
 <body>
 
-<iframe id="iframeContainer" src="https://example.com"></iframe>
+<input type="text" id="urlInput" placeholder="Enter website URL">
+<iframe id="iframeContainer"></iframe>
 
 <div id="codeContainer">
     <textarea id="codeArea" placeholder="Enter your code here"></textarea>
@@ -60,13 +67,33 @@
         var iframe = document.getElementById('iframeContainer');
         var codeArea = document.getElementById('codeArea');
         var injectButton = document.getElementById('injectButton');
+        var urlInput = document.getElementById('urlInput');
 
+        // Function to load website in the iframe
+        function loadWebsite() {
+            var url = urlInput.value;
+            if (url.trim() !== '') {
+                iframe.src = url;
+            }
+        }
+
+        // Load website initially
+        loadWebsite();
+
+        // Event listener for injecting code
         injectButton.addEventListener('click', function() {
             var code = codeArea.value;
             try {
                 iframe.contentWindow.eval(code);
             } catch (e) {
                 console.error('Error injecting code:', e);
+            }
+        });
+
+        // Event listener for pressing Enter key in URL input
+        urlInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                loadWebsite();
             }
         });
     };
