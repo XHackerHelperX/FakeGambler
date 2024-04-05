@@ -1,80 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JS Bypasser</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-    }
-    #container {
-        display: flex;
-    }
-    #iframe-container {
-        flex: 1;
-        border: 1px solid #ccc;
-        margin-right: 10px;
-    }
-    #iframe {
-        width: 1200px;
-        height: 800px;
-        border: none;
-    }
-    #code-container {
-        flex: 1;
-        border: 1px solid #ccc;
-        padding: 10px;
-    }
-    #code {
-        width: 100%;
-        height: 300px;
-    }
-    #load-btn {
-        margin-top: 10px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inject Code into Iframe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #iframeContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #popupContainer {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #closePopup {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div id="container">
-        <div id="iframe-container">
-            <iframe id="iframe"></iframe>
-        </div>
-        <div id="code-container">
-            <h3>Code Injection</h3>
-            <textarea id="code" placeholder="Enter code to inject into the website"></textarea>
-            <button id="inject-btn">Inject Code</button>
-        </div>
-    </div>
-    <div>
-        <input type="text" id="website-url" placeholder="Enter website URL">
-        <button id="load-btn">Load Website</button>
-    </div>
 
-    <script>
-        const loadBtn = document.getElementById('load-btn');
-        const iframe = document.getElementById('iframe');
-        const websiteUrlInput = document.getElementById('website-url');
-        const injectBtn = document.getElementById('inject-btn');
-        const codeTextarea = document.getElementById('code');
+<div id="popupContainer">
+    <span id="closePopup">X</span>
+    <h2>Inject Code</h2>
+    <textarea id="codeInput" rows="5" cols="30"></textarea><br>
+    <button id="injectBtn">Inject</button>
+</div>
 
-        loadBtn.addEventListener('click', () => {
-            const websiteUrl = websiteUrlInput.value.trim();
-            if (websiteUrl !== '') {
-                iframe.src = websiteUrl;
-            } else {
-                alert('Please enter a website URL');
-            }
-        });
+<div>
+    <input type="text" id="websiteInput" placeholder="Enter website URL">
+    <button id="loadBtn">Load Website</button>
+    <button id="openPopupBtn">Open Code Injector</button>
+</div>
 
-        injectBtn.addEventListener('click', () => {
-            const code = codeTextarea.value.trim();
-            if (code !== '') {
-                iframe.contentWindow.eval(code); // Execute code in iframe context
-            } else {
-                alert('Please enter code to inject');
-            }
-        });
-    </script>
+<div id="iframeContainer">
+    <iframe id="websiteIframe" width="800" height="600" frameborder="0"></iframe>
+</div>
+
+<script>
+    document.getElementById("loadBtn").addEventListener("click", function() {
+        var url = document.getElementById("websiteInput").value;
+        document.getElementById("websiteIframe").src = url;
+    });
+
+    document.getElementById("injectBtn").addEventListener("click", function() {
+        var code = document.getElementById("codeInput").value;
+        var iframe = document.getElementById("websiteIframe").contentWindow;
+        iframe.eval(code);
+    });
+
+    document.getElementById("closePopup").addEventListener("click", function() {
+        document.getElementById("popupContainer").style.display = "none";
+    });
+
+    document.getElementById("openPopupBtn").addEventListener("click", function() {
+        document.getElementById("popupContainer").style.display = "block";
+    });
+</script>
+
 </body>
 </html>
