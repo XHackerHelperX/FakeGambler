@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website with Iframe and Code Injection</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    #iframeContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 70%;
+        height: 100%;
+        border: none;
+    }
+    #codeContainer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 30%;
+        height: 100%;
+        background-color: #f4f4f4;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow-y: auto;
+    }
+    #codeArea {
+        width: 100%;
+        height: calc(100% - 40px);
+        resize: none;
+    }
+    #injectButton {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        outline: none;
+    }
+</style>
+</head>
+<body>
+
+<iframe id="iframeContainer" src="https://example.com"></iframe>
+
+<div id="codeContainer">
+    <textarea id="codeArea" placeholder="Enter your code here"></textarea>
+    <button id="injectButton">Inject Code</button>
+</div>
+
+<script>
+    window.onload = function() {
+        var iframe = document.getElementById('iframeContainer');
+        var codeArea = document.getElementById('codeArea');
+        var injectButton = document.getElementById('injectButton');
+
+        injectButton.addEventListener('click', function() {
+            var code = codeArea.value;
+            try {
+                iframe.contentWindow.eval(code);
+            } catch (e) {
+                console.error('Error injecting code:', e);
+            }
+        });
+    };
+</script>
+
+</body>
+</html>
