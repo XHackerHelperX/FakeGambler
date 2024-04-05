@@ -3,96 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website with Iframe and Code Injection</title>
+<title>Website Loader</title>
 <style>
     body {
         font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
     }
-    #iframeContainer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 70%;
-        height: 100%;
-        border: none;
+    #container {
+        display: flex;
     }
-    #codeContainer {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 30%;
-        height: 100%;
-        background-color: #f4f4f4;
-        padding: 20px;
-        box-sizing: border-box;
-        overflow-y: auto;
+    #iframe-container {
+        flex: 1;
+        border: 1px solid #ccc;
+        margin-right: 10px;
     }
-    #urlInput, #codeArea {
-        width: calc(100% - 40px);
-        padding: 10px;
-        margin-bottom: 10px;
-        box-sizing: border-box;
-    }
-    #injectButton {
+    #iframe {
         width: 100%;
-        padding: 10px;
-        background-color: #007bff;
-        color: #fff;
+        height: 500px;
         border: none;
-        cursor: pointer;
-        outline: none;
+    }
+    #code-container {
+        flex: 1;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    #code {
+        width: 100%;
+        height: 300px;
+    }
+    #load-btn {
+        margin-top: 10px;
     }
 </style>
 </head>
 <body>
+    <div id="container">
+        <div id="iframe-container">
+            <iframe id="iframe"></iframe>
+        </div>
+        <div id="code-container">
+            <h3>Code Injection</h3>
+            <textarea id="code" placeholder="Enter code to inject into the website"></textarea>
+            <button id="inject-btn">Inject Code</button>
+        </div>
+    </div>
+    <div>
+        <input type="text" id="website-url" placeholder="Enter website URL">
+        <button id="load-btn">Load Website</button>
+    </div>
 
-<input type="text" id="urlInput" placeholder="Enter website URL">
-<iframe id="iframeContainer"></iframe>
+    <script>
+        const loadBtn = document.getElementById('load-btn');
+        const iframe = document.getElementById('iframe');
+        const websiteUrlInput = document.getElementById('website-url');
+        const injectBtn = document.getElementById('inject-btn');
+        const codeTextarea = document.getElementById('code');
 
-<div id="codeContainer">
-    <textarea id="codeArea" placeholder="Enter your code here"></textarea>
-    <button id="injectButton">Inject Code</button>
-</div>
-
-<script>
-    window.onload = function() {
-        var iframe = document.getElementById('iframeContainer');
-        var codeArea = document.getElementById('codeArea');
-        var injectButton = document.getElementById('injectButton');
-        var urlInput = document.getElementById('urlInput');
-
-        // Function to load website in the iframe
-        function loadWebsite() {
-            var url = urlInput.value;
-            if (url.trim() !== '') {
-                iframe.src = url;
-            }
-        }
-
-        // Load website initially
-        loadWebsite();
-
-        // Event listener for injecting code
-        injectButton.addEventListener('click', function() {
-            var code = codeArea.value;
-            try {
-                iframe.contentWindow.eval(code);
-            } catch (e) {
-                console.error('Error injecting code:', e);
+        loadBtn.addEventListener('click', () => {
+            const websiteUrl = websiteUrlInput.value.trim();
+            if (websiteUrl !== '') {
+                iframe.src = websiteUrl;
+            } else {
+                alert('Please enter a website URL');
             }
         });
 
-        // Event listener for pressing Enter key in URL input
-        urlInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                loadWebsite();
+        injectBtn.addEventListener('click', () => {
+            const code = codeTextarea.value.trim();
+            if (code !== '') {
+                iframe.contentWindow.eval(code); // Execute code in iframe context
+            } else {
+                alert('Please enter code to inject');
             }
         });
-    };
-</script>
-
+    </script>
 </body>
 </html>
