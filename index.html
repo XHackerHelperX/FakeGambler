@@ -3,77 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inject Code into Iframe</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        #iframeContainer {
-            margin-top: 20px;
-            text-align: center;
-        }
-        #popupContainer {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        #closePopup {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            cursor: pointer;
-        }
-    </style>
+    <title>Fake Money Gambling</title>
 </head>
 <body>
-
-<div id="popupContainer">
-    <span id="closePopup">X</span>
-    <h2>Inject Code</h2>
-    <textarea id="codeInput" rows="5" cols="30"></textarea><br>
-    <button id="injectBtn">Inject</button>
-</div>
-
-<div>
-    <input type="text" id="websiteInput" placeholder="Enter website URL">
-    <button id="loadBtn">Load Website</button>
-    <button id="openPopupBtn">Open Code Injector</button>
-</div>
-
-<div id="iframeContainer">
-    <iframe id="websiteIframe" width="800" height="600" frameborder="0"></iframe>
-</div>
-
-<script>
-    document.getElementById("loadBtn").addEventListener("click", function() {
-        var url = document.getElementById("websiteInput").value;
-        document.getElementById("websiteIframe").src = url;
-    });
-
-    document.getElementById("injectBtn").addEventListener("click", function() {
-        var code = document.getElementById("codeInput").value;
-        var iframe = document.getElementById("websiteIframe").contentWindow;
-        iframe.eval(code);
-    });
-
-    document.getElementById("closePopup").addEventListener("click", function() {
-        document.getElementById("popupContainer").style.display = "none";
-    });
-
-    document.getElementById("openPopupBtn").addEventListener("click", function() {
-        document.getElementById("popupContainer").style.display = "block";
-    });
-</script>
-
+    <h1>Welcome to Fake Money Gambling!</h1>
+    <p>Your starting balance: <span id="balance">$10</span></p>
+    
+    <label for="winPercentage">Win Percentage:</label>
+    <input type="number" id="winPercentage" min="0" max="80" value="50" onchange="updateMultiplier()">
+    
+    <label for="betAmount">Bet Amount ($):</label>
+    <input type="number" id="betAmount" min="1" max="10" value="1">
+    
+    <label for="interval">Interval (seconds):</label>
+    <input type="number" id="interval" min="1" value="1">
+    
+    <button id="startAutoPlay" onclick="toggleAutoPlay()">Start Auto Play</button>
+    
+    <button id="playGameButton" onclick="playGame()">Play Game</button>
+    
+    <p id="multiplierDisplay">Multiplier: <span id="multiplier">1</span></p>
+    
+    <p id="result"></p>
+    
+    <script>
+        var startingMoney = 10;
+        var autoPlayInterval;
+        var autoPlayActive = false;
+        var winPercentage = parseInt(document.getElementById("winPercentage").value);
+        
+        document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
+        updateMultiplier();
+        
+        function updateMultiplier() {
+            winPercentage = parseInt(document.getElementById("winPercentage").value);
+            var multiplier = calculateMultiplier(winPercentage);
+            document.getElementById("multiplier").textContent = multiplier.toFixed(2);
+        }
+        
+        function playGame() {
+            var betAmount = parseInt(document.getElementById("betAmount").value);
+            
+            if (isNaN(betAmount)) {
+                alert("Please enter a valid bet amount.");
+                return;
+            }
+            
+            if (betAmount <= 0 || betAmount > startingMoney) {
+                alert("Bet amount must be between 1 and " + numberWithCommas(startingMoney) + ".");
+                return;
+            }
+            
+            var multiplier = calculateMultiplier(winPercentage);
+            var randomNumber = Math.random() * 100;
+            var result = "";
+            
+            if (randomNumber <= winPercentage) {
+                var winAmount = betAmount * multiplier;
+                result = "You win $" + numberWithCommas(winAmount) + "! Multiplier: " + multiplier.toFixed(2);
+                startingMoney += winAmount;
+            } else {
+                var lossAmount = betAmount;
+                result = "You lose $" + numberWithCommas(lossAmount) + "! Multiplier: " + multiplier.toFixed(2);
+                startingMoney -= lossAmount;
+            }
+            
+            if (startingMoney <= 0) {
+                result += "<br>You are out of money. Game Over!";
+                document.querySelector("button").disabled = true;
+                clearInterval(autoPlayInterval);
+                autoPlayActive = false;
+                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
+            } else {
+                result += "<br>Your current balance: $" + numberWithCommas(startingMoney);
+                document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
+            }
+            
+            document.getElementById("result").innerHTML = result;
+        }
+        
+        function calculateMultiplier(winPercentage) {
+            if (winPercentage <= 10) {
+                return 10;
+            } else if (winPercentage <= 30) {
+                return 5;
+            } else if (winPercentage <= 50) {
+                return 3;
+            } else if (winPercentage <= 70) {
+                return 2;
+            } else {
+                return 0.5;
+            }
+        }
+        
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        function toggleAutoPlay() {
+            if (!autoPlayActive) {
+                var interval = parseInt(document.getElementById("interval").value) * 1000;
+                autoPlayInterval = setInterval(playGame, interval);
+                autoPlayActive = true;
+                document.getElementById("startAutoPlay").textContent = "Stop Auto Play";
+            } else {
+                clearInterval(autoPlayInterval);
+                autoPlayActive = false;
+                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
+            }
+        }
+    </script>
 </body>
 </html>
