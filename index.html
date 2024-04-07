@@ -97,8 +97,8 @@
         </select>
         
         <label for="betAmount">Bet Amount ($):</label>
-        <input type="number" id="betAmount" min="1" max="10" value="1">
-        
+		<input type="number" id="betAmount" min="0.01" step="0.01" value="1">
+
         <label for="interval">Interval (seconds):</label>
         <input type="number" id="interval" min="1" value="1">
         
@@ -130,64 +130,64 @@
         document.getElementById("actualMoneyToday").textContent = "$" + numberWithCommas(actualMoneyToday);
         document.getElementById("actualMoneyThisWeek").textContent = "$" + numberWithCommas(actualMoneyThisWeek);
         
-        function playGame() {
-            var winPercentage = parseInt(winPercentageSelect.value);
-            var betAmount = parseInt(document.getElementById("betAmount").value);
-            
-            if (isNaN(winPercentage) || isNaN(betAmount)) {
-                alert("Please enter valid numbers.");
-                return;
-            }
-            
-            if (betAmount <= 0 || betAmount > startingMoney) {
-                alert("Bet amount must be between 1 and " + numberWithCommas(startingMoney) + ".");
-                return;
-            }
-            
-            if (winPercentage < 0 || winPercentage > 50) {
-                alert("Win percentage must be between 0 and 50.");
-                return;
-            }
-            
-            var multiplier = calculateMultiplier(winPercentage);
-            var randomNumber = Math.random() * 100;
-            var result = "";
-            var today = new Date();
-            var dayOfWeek = today.getDay();
-            
-            if (randomNumber <= winPercentage) {
-                var winAmount = betAmount * multiplier;
-                result = "You win $" + numberWithCommas(winAmount) + "! Multiplier: " + multiplier.toFixed(2);
-                startingMoney += winAmount;
-                moneyToday += winAmount;
-                moneyThisWeek += winAmount;
-                actualMoneyToday += winAmount;
-                actualMoneyThisWeek += winAmount;
-            } else {
-                var lossAmount = betAmount;
-                result = "You lose $" + numberWithCommas(lossAmount) + "! Multiplier: " + multiplier.toFixed(2);
-                startingMoney -= lossAmount;
-                moneyLost += lossAmount;
-                actualMoneyToday -= lossAmount;
-                actualMoneyThisWeek -= lossAmount;
-            }
-            
-            if (startingMoney <= 0) {
-                result += "<br>You are out of money. Game Over!";
-                document.querySelector("button").disabled = true;
-                clearInterval(autoPlayInterval);
-                autoPlayActive = false;
-                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
-            } else {
-                result += "<br>Your current balance: $" + numberWithCommas(startingMoney);
-                document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
-            }
-            
-            document.getElementById("result").innerHTML = result;
-            updateStats();
-            checkAchievements();
-        }
-        
+function playGame() {
+    var winPercentage = parseInt(winPercentageSelect.value);
+    var betAmount = parseFloat(document.getElementById("betAmount").value);
+    
+    if (isNaN(winPercentage) || isNaN(betAmount)) {
+        alert("Please enter valid numbers.");
+        return;
+    }
+    
+    if (betAmount <= 0 || betAmount > startingMoney) {
+        alert("Bet amount must be between $0.01 and $" + numberWithCommas(startingMoney) + ".");
+        return;
+    }
+    
+    if (winPercentage < 0 || winPercentage > 50) {
+        alert("Win percentage must be between 0 and 50.");
+        return;
+    }
+
+    var multiplier = calculateMultiplier(winPercentage);
+    var randomNumber = Math.random() * 100;
+    var result = "";
+    var today = new Date();
+    var dayOfWeek = today.getDay();
+    
+    if (randomNumber <= winPercentage) {
+        var winAmount = betAmount * multiplier;
+        result = "You win $" + numberWithCommas(winAmount.toFixed(2)) + "! Multiplier: " + multiplier.toFixed(2);
+        startingMoney += winAmount;
+        moneyToday += winAmount;
+        moneyThisWeek += winAmount;
+        actualMoneyToday += winAmount;
+        actualMoneyThisWeek += winAmount;
+    } else {
+        var lossAmount = betAmount;
+        result = "You lose $" + numberWithCommas(lossAmount.toFixed(2)) + "! Multiplier: " + multiplier.toFixed(2);
+        startingMoney -= lossAmount;
+        moneyLost += lossAmount;
+        actualMoneyToday -= lossAmount;
+        actualMoneyThisWeek -= lossAmount;
+    }
+    
+    if (startingMoney <= 0) {
+        result += "<br>You are out of money. Game Over!";
+        document.querySelector("button").disabled = true;
+        clearInterval(autoPlayInterval);
+        autoPlayActive = false;
+        document.getElementById("startAutoPlay").textContent = "Start Auto Play";
+    } else {
+        result += "<br>Your current balance: $" + numberWithCommas(startingMoney.toFixed(2));
+        document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney.toFixed(2));
+    }
+    
+    document.getElementById("result").innerHTML = result;
+    updateStats();
+    checkAchievements();
+}
+
            function calculateMultiplier(winPercentage) {
             if (winPercentage <= 5) {
                 return 17;
@@ -196,13 +196,13 @@
             } else if (winPercentage <= 15) {
                 return 5;
             } else if (winPercentage <= 20) {
-                return 3;
+                return 3.7;
             } else if (winPercentage <= 25) {
                 return 2.5;
             } else if (winPercentage <= 30) {
-                return 2;
+                return 2.3;
             } else if (winPercentage <= 35) {
-                return 1.5;
+                return 1.83;
             } else if (winPercentage <= 40) {
                 return 1.5;
             } else if (winPercentage <= 45) {
@@ -219,24 +219,18 @@
     return (Math.round(x * 100) / 100).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
         
- function toggleAutoPlay() {
-    var interval = parseInt(document.getElementById("interval").value);
-    if (interval < 1) {
-        alert("Interval must be 1 or greater.");
-        return;
-    }
-
-    if (!autoPlayActive) {
-        interval *= 1000; // Convert seconds to milliseconds
-        autoPlayInterval = setInterval(playGame, interval);
-        autoPlayActive = true;
-        document.getElementById("startAutoPlay").textContent = "Stop Auto Play";
-    } else {
-        clearInterval(autoPlayInterval);
-        autoPlayActive = false;
-        document.getElementById("startAutoPlay").textContent = "Start Auto Play";
-    }
-}
+   function toggleAutoPlay() {
+            if (!autoPlayActive) {
+                var interval = parseInt(document.getElementById("interval").value) * 1000;
+                autoPlayInterval = setInterval(playGame, interval);
+                autoPlayActive = true;
+                document.getElementById("startAutoPlay").textContent = "Stop Auto Play";
+            } else {
+                clearInterval(autoPlayInterval);
+                autoPlayActive = false;
+                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
+            }
+        }
 
 function restart() {
     // Ask for confirmation before restarting
