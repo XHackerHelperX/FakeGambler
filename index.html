@@ -10,7 +10,7 @@
     <p>Your starting balance: <span id="balance">$10</span></p>
     
     <label for="winPercentage">Win Percentage:</label>
-    <input type="number" id="winPercentage" min="0" max="80" value="50" onchange="updateMultiplier()">
+    <input type="number" id="winPercentage" min="0" max="100" value="50">
     
     <label for="betAmount">Bet Amount ($):</label>
     <input type="number" id="betAmount" min="1" max="10" value="1">
@@ -26,92 +26,6 @@
     
     <p id="result"></p>
     
-    <script>
-        var startingMoney = 10;
-        var autoPlayInterval;
-        var autoPlayActive = false;
-        var winPercentage = parseInt(document.getElementById("winPercentage").value);
-        
-        document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
-        updateMultiplier();
-        
-        function updateMultiplier() {
-            winPercentage = parseInt(document.getElementById("winPercentage").value);
-            var multiplier = calculateMultiplier(winPercentage);
-            document.getElementById("multiplier").textContent = multiplier.toFixed(2);
-        }
-        
-        function playGame() {
-            var betAmount = parseInt(document.getElementById("betAmount").value);
-            
-            if (isNaN(betAmount)) {
-                alert("Please enter a valid bet amount.");
-                return;
-            }
-            
-            if (betAmount <= 0 || betAmount > startingMoney) {
-                alert("Bet amount must be between 1 and " + numberWithCommas(startingMoney) + ".");
-                return;
-            }
-            
-            var multiplier = calculateMultiplier(winPercentage);
-            var randomNumber = Math.random() * 100;
-            var result = "";
-            
-            if (randomNumber <= winPercentage) {
-                var winAmount = betAmount * multiplier;
-                result = "You win $" + numberWithCommas(winAmount) + "! Multiplier: " + multiplier.toFixed(2);
-                startingMoney += winAmount;
-            } else {
-                var lossAmount = betAmount;
-                result = "You lose $" + numberWithCommas(lossAmount) + "! Multiplier: " + multiplier.toFixed(2);
-                startingMoney -= lossAmount;
-            }
-            
-            if (startingMoney <= 0) {
-                result += "<br>You are out of money. Game Over!";
-                document.querySelector("button").disabled = true;
-                clearInterval(autoPlayInterval);
-                autoPlayActive = false;
-                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
-            } else {
-                result += "<br>Your current balance: $" + numberWithCommas(startingMoney);
-                document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
-            }
-            
-            document.getElementById("result").innerHTML = result;
-        }
-        
-        function calculateMultiplier(winPercentage) {
-            if (winPercentage <= 10) {
-                return 10;
-            } else if (winPercentage <= 30) {
-                return 5;
-            } else if (winPercentage <= 50) {
-                return 3;
-            } else if (winPercentage <= 70) {
-                return 2;
-            } else {
-                return 0.5;
-            }
-        }
-        
-        function numberWithCommas(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-        
-        function toggleAutoPlay() {
-            if (!autoPlayActive) {
-                var interval = parseInt(document.getElementById("interval").value) * 1000;
-                autoPlayInterval = setInterval(playGame, interval);
-                autoPlayActive = true;
-                document.getElementById("startAutoPlay").textContent = "Stop Auto Play";
-            } else {
-                clearInterval(autoPlayInterval);
-                autoPlayActive = false;
-                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
