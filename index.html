@@ -3,104 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake Money Gambling</title>
+    <title>FakeGambler</title>
     <style>
         body {
-            background-color: #2b1542; /* Dark purple background */
-            color: #ffffff; /* White text */
             font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
             padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         h1 {
-            color: #ffd700; /* Gold heading */
-            margin-top: 0; /* Remove default margin */
+            color: #333;
+            text-align: center;
         }
-
-        p {
-            margin-bottom: 10px;
-            margin-top: 5px; /* Add space at the top */
+        .balance, .money {
+            font-size: 18px;
+            font-weight: bold;
         }
-
-        input[type="number"], select {
-            padding: 8px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            background-color: #483D8B; /* Dark slate blue input */
-            color: #ffffff; /* White text */
-        }
-
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-        }
-
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
         }
-
+        input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
         button {
-            padding: 10px 20px;
-            border-radius: 20px;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
             border: none;
-            background-color: #9370DB; /* Medium purple button */
-            color: #ffffff; /* White text */
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
         }
-
         button:hover {
-            background-color: #663399; /* Dark orchid button on hover */
+            background-color: #45a049;
         }
-
         #result {
             margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
         }
-
-        #achievements {
-            margin-top: 10px;
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        li {
+            list-style-type: none;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Fake Money Gambling!</h1>
-    <p>Your starting balance: <span id="balance">$10</span></p>
-    <p>Money made today: <span id="moneyToday">$0</span></p>
-    <p>Actual money made today: <span id="actualMoneyToday">$0</span></p>
-    <p>Money made this week: <span id="moneyThisWeek">$0</span></p>
-    <p>Actual money made this week: <span id="actualMoneyThisWeek">$0</span></p>
-    <p>Money lost: <span id="moneyLost">$0</span></p>
-    <p id="achievements">Achievements: None</p>
-    
-    <label for="winPercentage">Win Percentage:</label>
-    <select id="winPercentage" onchange="updateMultiplier()">
-        <option value="50">50%</option>
-        <option value="45">45%</option>
-        <option value="40">40%</option>
-        <option value="35">35%</option>
-        <option value="30">30%</option>
-        <option value="25">25%</option>
-        <option value="20">20%</option>
-        <option value="15">15%</option>
-        <option value="10">10%</option>
-        <option value="5">5%</option>
-    </select>
-    
-    <label for="betAmount">Bet Amount ($):</label>
-    <input type="number" id="betAmount" min="1" max="10" value="1">
-    
-    <label for="interval">Interval (seconds):</label>
-    <input type="number" id="interval" min="1" value="1">
-    
-    <button id="startAutoPlay" onclick="toggleAutoPlay()">Start Auto Play</button>
-    
-    <button id="playGameButton" onclick="playGame()">Play Game</button>
-    
-    <button id="restartButton" onclick="restart()">Restart</button> <!-- Added restart button -->
-    
-    <p id="result"></p>
-    
+    <div class="container">
+        <h1>FakeGambler</h1>
+        <p class="balance">Your starting balance: <span id="balance">$10</span></p>
+        <p class="money">Money made today: <span id="moneyToday">$0</span></p>
+        <p class="money">Actual money made today: <span id="actualMoneyToday">$0</span></p>
+        <p class="money">Money made this week: <span id="moneyThisWeek">$0</span></p>
+        <p class="money">Actual money made this week: <span id="actualMoneyThisWeek">$0</span></p>
+        <p class="money">Money lost: <span id="moneyLost">$0</span></p>
+        <p>Achievements:</p>
+        <ul id="achievements"></ul>
+        
+        <label for="winPercentage">Win Percentage:</label>
+        <select id="winPercentage" onchange="updateMultiplier()">
+            <option value="50">50%</option>
+            <option value="45">45%</option>
+            <option value="40">40%</option>
+            <option value="35">35%</option>
+            <option value="30">30%</option>
+            <option value="25">25%</option>
+            <option value="20">20%</option>
+            <option value="15">15%</option>
+            <option value="10">10%</option>
+            <option value="5">5%</option>
+        </select>
+        
+        <label for="betAmount">Bet Amount ($):</label>
+        <input type="number" id="betAmount" min="1" max="10" value="1">
+        
+        <label for="interval">Interval (seconds):</label>
+        <input type="number" id="interval" min="1" value="1">
+        
+        <button id="startAutoPlay" onclick="toggleAutoPlay()">Start Auto Play</button>
+        
+        <button id="playGameButton" onclick="playGame()">Play Game</button>
+        
+        <button id="restartButton" onclick="restart()">Restart</button> <!-- Added restart button -->
+        
+        <p id="result"></p>
+    </div>
+
     <script>
         var startingMoney = 10;
         var autoPlayInterval;
@@ -178,46 +188,84 @@
             checkAchievements();
         }
         
-        function calculateMultiplier(winPercentage) {
-            if (winPercentage <= 20) {
+           function calculateMultiplier(winPercentage) {
+            if (winPercentage <= 5) {
+                return 17;
+            } else if (winPercentage <= 10) {
+                return 8;
+            } else if (winPercentage <= 15) {
                 return 5;
-            } else if (winPercentage <= 40) {
+            } else if (winPercentage <= 20) {
                 return 3;
-            } else if (winPercentage <= 60) {
+            } else if (winPercentage <= 25) {
+                return 2.5;
+            } else if (winPercentage <= 30) {
                 return 2;
-            } else if (winPercentage <= 80) {
+            } else if (winPercentage <= 35) {
                 return 1.5;
+            } else if (winPercentage <= 40) {
+                return 1.5;
+            } else if (winPercentage <= 45) {
+                return 1.2;
+            } else if (winPercentage <= 50) {
+                return 1;
             } else {
                 return 1;
             }
         }
         
-        function numberWithCommas(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+ function numberWithCommas(x) {
+    // Round to two decimal places and then add commas
+    return (Math.round(x * 100) / 100).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
         
-        function toggleAutoPlay() {
-            if (!autoPlayActive) {
-                var interval = parseInt(document.getElementById("interval").value) * 1000;
-                autoPlayInterval = setInterval(playGame, interval);
-                autoPlayActive = true;
-                document.getElementById("startAutoPlay").textContent = "Stop Auto Play";
-            } else {
-                clearInterval(autoPlayInterval);
-                autoPlayActive = false;
-                document.getElementById("startAutoPlay").textContent = "Start Auto Play";
-            }
-        }
+ function toggleAutoPlay() {
+    var interval = parseInt(document.getElementById("interval").value);
+    if (interval < 1) {
+        alert("Interval must be 1 or greater.");
+        return;
+    }
 
-        function restart() {
-            startingMoney = 10;
-            document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
-            document.querySelector("button").disabled = false;
-            document.getElementById("result").textContent = "";
-            clearInterval(autoPlayInterval);
-            autoPlayActive = false;
-            document.getElementById("startAutoPlay").textContent = "Start Auto Play";
-        }
+    if (!autoPlayActive) {
+        interval *= 1000; // Convert seconds to milliseconds
+        autoPlayInterval = setInterval(playGame, interval);
+        autoPlayActive = true;
+        document.getElementById("startAutoPlay").textContent = "Stop Auto Play";
+    } else {
+        clearInterval(autoPlayInterval);
+        autoPlayActive = false;
+        document.getElementById("startAutoPlay").textContent = "Start Auto Play";
+    }
+}
+
+function restart() {
+    // Ask for confirmation before restarting
+    var confirmRestart = confirm("Are you sure you want to restart? This will reset all your progress.");
+    if (confirmRestart) {
+        startingMoney = 10;
+        moneyToday = 0;
+        moneyThisWeek = 0;
+        moneyLost = 0;
+        actualMoneyToday = 0;
+        actualMoneyThisWeek = 0;
+        achievements = [];
+
+        // Update displayed values
+        document.getElementById("balance").textContent = "$" + numberWithCommas(startingMoney);
+        document.getElementById("moneyToday").textContent = "$" + numberWithCommas(moneyToday);
+        document.getElementById("moneyThisWeek").textContent = "$" + numberWithCommas(moneyThisWeek);
+        document.getElementById("moneyLost").textContent = "$" + numberWithCommas(moneyLost);
+        document.getElementById("actualMoneyToday").textContent = "$" + numberWithCommas(actualMoneyToday);
+        document.getElementById("actualMoneyThisWeek").textContent = "$" + numberWithCommas(actualMoneyThisWeek);
+        
+        // Clear achievements display
+        var achievementsList = document.getElementById("achievements");
+        achievementsList.innerHTML = "";
+
+        // Clear local storage
+        localStorage.clear();
+    }
+}
 
         function updateMultiplier() {
             var winPercentage = parseInt(winPercentageSelect.value);
